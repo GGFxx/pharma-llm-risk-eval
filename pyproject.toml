@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pharma-llm-risk-eval"
+version = "0.0.1"
+description = "医药垂域 LLM 风险与可靠性评测：监管事实忠实度 / 用药安全 / 双用途知识边界——金标冻结 + Wilson 分层指标 + 回归门禁"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+dev = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
