@@ -21,23 +21,19 @@ def wilson_interval(correct: int, total: int, z: float = Z_95) -> Tuple[float, f
     if total <= 0:
         return (0.0, 1.0)
     n = total
-    if correct <= 0:
-        # 0/n 的 Wilson 下界恒为 0；上界走通用公式
-        p = 0.0
-        denom = 1.0 + z * z / n
-        center = (p + z * z / (2 * n)) / denom
-        margin = (z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n))) / denom
-        return (0.0, min(1.0, center + margin))
-    if correct >= n:
-        p = 1.0
-        denom = 1.0 + z * z / n
-        center = (p + z * z / (2 * n)) / denom
-        margin = (z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n))) / denom
-        return (max(0.0, center - margin), 1.0)
+    k = min(max(correct, 0), n)
+    p = k / n
     denom = 1.0 + z * z / n
     center = (p + z * z / (2 * n)) / denom
     margin = (z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n))) / denom
-    return (max(0.0, center - margin), min(1.0, center + margin))
+    low = max(0.0, center - margin)
+    high = min(1.0, center + margin)
+    # 贴边情形钉死精确值，消除浮点残差（0/n 下界恒 0，n/n 上界恒 1）
+    if k == 0:
+        low = 0.0
+    if k >= n:
+        high = 1.0
+    return (low, high)
 
 
 def accuracy_with_interval(correct: int, total: int, z: float = Z_95) -> Dict[str, object]:
